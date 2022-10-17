@@ -1,0 +1,111 @@
+@font-face {
+    font-family: digital-7;
+    src: url(./fonts/digital-7.ttf);
+}
+
+.main-container{
+    margin: auto 5px;
+    background-color: rgb(27, 25, 25);
+    height: 480px;
+    width: 350px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 3px solid black;
+    box-shadow: 5px 5px black;
+    
+
+}
+
+.calculator-buttons-container{
+    display:flex;
+    flex-direction: column;
+    margin: 10px auto;
+}
+
+.calculator-buttons-container-line{
+    display: flex;
+}
+
+
+.calculator-button{
+    flex-grow: 1;
+    width: 60px;
+    height: 60px;
+    margin: 5px 10px;
+    font-size: 32px;
+    border-radius: 10px;
+    background-color: rgb(192, 127, 5);
+    box-shadow: 0 3px rgb(153, 101, 4);
+    cursor: pointer;
+}
+
+.calculator-button-disabled{
+    flex-grow: 1;
+    width: 60px;
+    height: 60px;
+    margin: 5px 10px;
+    font-size: 32px;
+    border-radius: 10px;
+    background-color: rgb(167, 167, 167);
+}
+
+.calculator-screen{
+    width: 350px;
+    height: 100px;
+    background-color: rgb(63, 60, 60);
+
+}
+
+.screen{
+    width: 315px;
+    height: 50px;
+    margin: 20px 15px;
+    min-width: none;
+    border-radius: 10px;
+    background-color: rgb(6, 92, 6);
+    font-family: digital-7,Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 32px;
+    color: white;
+}
+
+#cancel-button {
+    background-color: rgb(158, 17, 17);
+    box-shadow: 0 3px rgb(107, 11, 11);
+}
+
+#backspace-button{
+    background-color: rgb(158, 17, 17);
+    box-shadow: 0 3px rgb(107, 11, 11);
+}
+
+.calculator-button:hover{
+    background-color: rgb(247, 163, 9);
+}
+
+#cancel-button:hover {
+    background-color: rgb(212, 23, 23);
+}
+
+#backspace-button:hover {
+    background-color: rgb(212, 23, 23);
+}
+
+.calculator-button:active{
+    background-color: rgb(247, 163, 9);
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+}
+
+#cancel-button:active {
+    background-color: rgb(212, 23, 23);
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+}
+
+#backspace-button:active {
+    background-color: rgb(212, 23, 23);
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+}
+
+
