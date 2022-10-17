@@ -96,9 +96,7 @@ function operatorButtonEventListener(button) {
         if (CalculatorLogic.arg1 == undefined) {
             CalculatorLogic.arg1 = +CalculatorUI.calculatorDisplay.value;
             CalculatorLogic.operator = button.textContent;
-            CalculatorLogic.shouldClearDisplay = true;
-            CalculatorUI.dotButton.disabled = false;
-            CalculatorUI.dotButton.className = "calculator-button";
+            resetCalcUI();
         }
         else {
             CalculatorLogic.arg2 = +CalculatorUI.calculatorDisplay.value;
