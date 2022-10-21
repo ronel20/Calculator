@@ -7,38 +7,39 @@
     <title>Calculator</title>
     <link rel="stylesheet" href="./style.css">
     <script src="script.js" defer></script>
+    <script src="tests.js" defer></script>
 </head>
 <body>
     <div class="main-container">
         <div class="calculator-screen">
-            <input type="text" class="screen" name="calculator-screen-text" value="0" disabled>
+            <input type="text" class="screen" name="calculator-screen-text" disabled>
 
         </div>
         <div class="calculator-buttons-container">
             <div class="calculator-buttons-container-line">
-                <button id="backspace-button" class="calculator-button">⌫</button>
-                <button id="cancel-button" class="calculator-button">C</button>
+                <button id="backspace-button" class="calculator-button-disabled" disabled>⌫</button>
+                <button id="cancel-button" class="calculator-button-disabled" disabled>C</button>
             </div>
             <div class="calculator-buttons-container-line">
-                <button class="calculator-button">7</button>
-                <button class="calculator-button">8</button>
-                <button class="calculator-button">9</button>
+                <button id="digit7" class="calculator-button">7</button>
+                <button id="digit8"class="calculator-button">8</button>
+                <button id="digit9"class="calculator-button">9</button>
                 <button id="divide-btn" class="calculator-button-disabled" disabled>÷</button>
             </div>
             <div class="calculator-buttons-container-line">
-                <button class="calculator-button">4</button>
-                <button class="calculator-button">5</button>
-                <button class="calculator-button">6</button>
+                <button id="digit4" class="calculator-button">4</button>
+                <button id="digit5" class="calculator-button">5</button>
+                <button id="digit6" class="calculator-button">6</button>
                 <button id="multiply-btn" class="calculator-button-disabled" disabled>X</button>
             </div>
             <div class="calculator-buttons-container-line">
-                <button class="calculator-button">1</button>
-                <button class="calculator-button">2</button>
-                <button class="calculator-button">3</button>
-                <button id="minus-btn" class="calculator-button-disabled" disabled>-</button>
+                <button id="digit1" class="calculator-button">1</button>
+                <button id="digit2" class="calculator-button">2</button>
+                <button id="digit3" class="calculator-button">3</button>
+                <button id="minus-btn" class="calculator-button">-</button>
             </div>
             <div class="calculator-buttons-container-line">
-                <button class="calculator-button">0</button>
+                <button id="digit0" class="calculator-button">0</button>
                 <button id="dot-btn" class="calculator-button">.</button>
                 <button id="equal-btn" class="calculator-button-disabled" disabled>=</button>
                 <button id="plus-btn" class="calculator-button-disabled" disabled>+</button>

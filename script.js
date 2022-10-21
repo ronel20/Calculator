@@ -1,19 +1,61 @@
-const MAX_VALUE = 9999999999;
-const MIN_VALUE = -9999999999;
-
-
 let CalculatorUI = {
-    allButtonsList:document.querySelectorAll('button.calculator-button, button.calculator-button-disabled'),
-    calculatorDisplay:document.querySelector('input.screen'),
-    dotButton:document.querySelector('button#dot-btn'),
-    plusButton:document.querySelector('button#plus-btn'),
-    minusButton:document.querySelector('button#minus-btn'),
-    multiplyButton:document.querySelector('button#multiply-btn'),
-    divideButton:document.querySelector('button#divide-btn'),
-    equalButton:document.querySelector('button#equal-btn')
+    allButtonsList: document.querySelectorAll('button.calculator-button, button.calculator-button-disabled'),
+    calculatorDisplay: document.querySelector('input.screen'),
+    dotButton: document.querySelector('button#dot-btn'),
+    plusButton: document.querySelector('button#plus-btn'),
+    minusButton: document.querySelector('button#minus-btn'),
+    multiplyButton: document.querySelector('button#multiply-btn'),
+    divideButton: document.querySelector('button#divide-btn'),
+    equalButton: document.querySelector('button#equal-btn'),
+    cancelButton: document.querySelector('button#cancel-button'),
+    backspaceButton: document.querySelector('button#backspace-button'),
+    numberButtons: [document.querySelector('button#digit0'),
+                    document.querySelector('button#digit1'),
+                    document.querySelector('button#digit2'),
+                    document.querySelector('button#digit3'),
+                    document.querySelector('button#digit4'),
+                    document.querySelector('button#digit5'),
+                    document.querySelector('button#digit6'),
+                    document.querySelector('button#digit7'),
+                    document.querySelector('button#digit8'),
+                    document.querySelector('button#digit9')],
+    BUTTON_ONE: '1',
+    BUTTON_TWO: '2',
+    BUTTON_THREE: '3',
+    BUTTON_FOUR: '4',
+    BUTTON_FIVE: '5',
+    BUTTON_SIX: '6',
+    BUTTON_SEVEN: '7',
+    BUTTON_EIGHT: '8',
+    BUTTON_NINE: '9',
+    BUTTON_ZERO: '0',
+    BUTTON_DOT: '.',
+    BUTTON_PLUS: '+',
+    BUTTON_MINUS: '-',
+    BUTTON_MULTIPLY: 'X',
+    BUTTON_DIVIDE: '÷',
+    KEY_DIVIDE: '/',
+    BUTTON_EQUALS: '=',
+    KEY_ENTER: 'Enter',
+    KEY_NAMPAD_ENTER: 'NumpadEnter', 
+    BUTTON_CANCEL: 'C',
+    BUTTON_BACKSPACE: '⌫',
+    KEY_BACKSPACE: 'Backspace',
+    KEY_ESCAPE: 'Escape',
+    BUTTON_ON_CLASS: "calculator-button",
+    BUTTON_OFF_CLASS: "calculator-button-disabled",
+    MAX_DISPLAY_LENGTH: 10,
+    ERROR_MESSAGE: "Err",
+    EMPTY_DISPLAY: ""
+    
+
+                    
+
 }
 
 let CalculatorLogic = {
+    MAX_VALUE: 9999999999,
+    MIN_VALUE: -9999999999,
     arg1: undefined,
     arg2: undefined,
     operator: undefined,
@@ -23,69 +65,163 @@ let CalculatorLogic = {
 console.log(CalculatorUI.calculatorDisplay);
 
 CalculatorUI.allButtonsList.forEach((button) => {
-    if (button.textContent>='0' && button.textContent<='9'){
-        button.addEventListener('click',numberButtonEventListener(button));
+    if (button.textContent>=CalculatorUI.BUTTON_ZERO && button.textContent<=CalculatorUI.BUTTON_NINE){
+        button.addEventListener('click',() => numberButtonEventListener(button));
     }
-    else if (button.textContent=='.') {
+    else if (button.textContent==CalculatorUI.BUTTON_DOT) {
         button.addEventListener('click',dotButtonEventListener(button));
     }
-    else if (button.textContent=='C'){
+    else if (button.textContent==CalculatorUI.BUTTON_CANCEL){
         button.addEventListener('click',cancelButtonEventListener());
     }
-    else if (button.textContent == '+' || button.textContent == '-' || button.textContent == 'X' || button.textContent == '÷'){
+    else if (button.textContent == CalculatorUI.BUTTON_PLUS || button.textContent == CalculatorUI.BUTTON_MINUS || button.textContent == CalculatorUI.BUTTON_MULTIPLY || button.textContent == CalculatorUI.BUTTON_DIVIDE){
         button.addEventListener('click',operatorButtonEventListener(button));
     }
-    else if (button.textContent == '='){
+    else if (button.textContent == CalculatorUI.BUTTON_EQUALS){
         button.addEventListener('click',equalButtonEventListener());
+    }
+    else if (button.textContent == CalculatorUI.BUTTON_BACKSPACE){
+        button.addEventListener('click',() => {
+            if (CalculatorUI.calculatorDisplay.value.length>0){
+                CalculatorUI.calculatorDisplay.value = CalculatorUI.calculatorDisplay.value.slice(0,CalculatorUI.calculatorDisplay.value.length-1);
+                CalculatorLogic.shouldClearDisplay = false;
+
+                if (!CalculatorUI.calculatorDisplay.value.includes(CalculatorUI.BUTTON_DOT)){
+                    CalculatorUI.dotButton.className = CalculatorUI.BUTTON_ON_CLASS;
+                    CalculatorUI.dotButton.disabled = false;
+                }else {
+                    CalculatorUI.dotButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+                    CalculatorUI.dotButton.disabled = true;
+                }
+
+                if (!CalculatorUI.calculatorDisplay.value.includes(CalculatorUI.BUTTON_MINUS) && CalculatorUI.minusButton.disabled){
+                    CalculatorUI.minusButton.className = CalculatorUI.BUTTON_ON_CLASS;
+                    CalculatorUI.minusButton.disabled = false;
+                }
+            }
+
+            if (CalculatorUI.calculatorDisplay.value.length==0){
+                resetCalcUI();
+                if (CalculatorLogic.arg1 != undefined) {
+                    CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_ON_CLASS;
+                    CalculatorUI.cancelButton.disabled = false;
+                }
+            }
+        });
     }
 })
 
-function numberButtonEventListener(button) {
-    return () => {
-        if (CalculatorLogic.shouldClearDisplay) {
-            CalculatorUI.calculatorDisplay.value = button.textContent;
-            CalculatorLogic.shouldClearDisplay = false;
-        }
-        else if (CalculatorUI.calculatorDisplay.value.length < 10) {
-            CalculatorUI.calculatorDisplay.value += button.textContent;
-        }
-        CalculatorUI.plusButton.disabled = false;
-        CalculatorUI.minusButton.disabled = false;
-        CalculatorUI.multiplyButton.disabled = false;
-        CalculatorUI.divideButton.disabled = false;
-        CalculatorUI.plusButton.className = "calculator-button";
-        CalculatorUI.minusButton.className = "calculator-button";
-        CalculatorUI.multiplyButton.className = "calculator-button";
-        CalculatorUI.divideButton.className = "calculator-button";
-        if (CalculatorLogic.arg1 != undefined) {
-            CalculatorUI.equalButton.className = "calculator-button";
-            CalculatorUI.equalButton.disabled = false;
-        }
+document.addEventListener('keyup', (e) => {
+    switch(e.key){
+        case CalculatorUI.BUTTON_ZERO:
+        case CalculatorUI.BUTTON_ONE:
+        case CalculatorUI.BUTTON_TWO:
+        case CalculatorUI.BUTTON_THREE:
+        case CalculatorUI.BUTTON_FOUR:
+        case CalculatorUI.BUTTON_FIVE:
+        case CalculatorUI.BUTTON_SIX:
+        case CalculatorUI.BUTTON_SEVEN:
+        case CalculatorUI.BUTTON_EIGHT:
+        case CalculatorUI.BUTTON_NINE:    
+            CalculatorUI.numberButtons[Number.parseInt(e.key)].click();
+            break;
+        case CalculatorUI.BUTTON_PLUS:
+            CalculatorUI.plusButton.click();
+            break;
+        case CalculatorUI.BUTTON_MINUS:
+            CalculatorUI.minusButton.click();
+            break;
+        case CalculatorUI.BUTTON_MULTIPLY:
+            CalculatorUI.multiplyButton.click();
+            break;
+        case CalculatorUI.BUTTON_DIVIDE:
+        case CalculatorUI.KEY_DIVIDE:    
+            CalculatorUI.divideButton.click();
+            break;
+        case CalculatorUI.BUTTON_EQUALS:
+        case CalculatorUI.KEY_ENTER:
+        case CalculatorUI.KEY_NAMPAD_ENTER:    
+            CalculatorUI.equalButton.click();
+            break;
+        case CalculatorUI.BUTTON_DOT:
+            CalculatorUI.dotButton.click();
+            break;
+        case CalculatorUI.KEY_ESCAPE:
+            CalculatorUI.cancelButton.click();
+            break;
+        case CalculatorUI.KEY_BACKSPACE:
+            CalculatorUI.backspaceButton.click();
+            break;
+        default:
+            break;    
 
-    };
+    }
+
+})
+
+function numberButtonEventListener(button) {
+    if (CalculatorLogic.shouldClearDisplay) {
+        CalculatorUI.calculatorDisplay.value = button.textContent;
+        CalculatorLogic.shouldClearDisplay = false;
+    }
+    else if (CalculatorUI.calculatorDisplay.value.length < CalculatorUI.MAX_DISPLAY_LENGTH) {
+        CalculatorUI.calculatorDisplay.value += button.textContent;
+    }
+    CalculatorUI.plusButton.disabled = false;
+    CalculatorUI.minusButton.disabled = false;
+    CalculatorUI.multiplyButton.disabled = false;
+    CalculatorUI.divideButton.disabled = false;
+    CalculatorUI.backspaceButton.disabled = false;
+    CalculatorUI.cancelButton.disabled = false;
+    CalculatorUI.plusButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    CalculatorUI.minusButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    CalculatorUI.multiplyButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    CalculatorUI.divideButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    CalculatorUI.backspaceButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    if (CalculatorLogic.arg1 != undefined) {
+        CalculatorUI.equalButton.className = CalculatorUI.BUTTON_ON_CLASS;
+        CalculatorUI.equalButton.disabled = false;
+    }
 }
 
 function dotButtonEventListener(button) {
     return () => {
         if (!button.disabled) {
             button.disabled = true;
-            button.className = "calculator-button-disabled";
+            button.className = CalculatorUI.BUTTON_OFF_CLASS;
             if (CalculatorLogic.shouldClearDisplay) {
-                CalculatorUI.calculatorDisplay.value = "0" + button.textContent;
+                CalculatorUI.numberButtons[0].click()
+                CalculatorUI.calculatorDisplay.value += button.textContent;
             }
-            else if (CalculatorUI.calculatorDisplay.value.length < 10) {
+            else if (CalculatorUI.calculatorDisplay.value.length < CalculatorUI.MAX_DISPLAY_LENGTH) {
+                if (CalculatorUI.calculatorDisplay.value == CalculatorUI.BUTTON_MINUS){
+                    CalculatorUI.numberButtons[0].click();
+                }
                 CalculatorUI.calculatorDisplay.value += button.textContent;
             }
             CalculatorLogic.shouldClearDisplay = false;
+            CalculatorUI.backspaceButton.disabled = false;
+            CalculatorUI.cancelButton.disabled = false;
+            CalculatorUI.plusButton.disabled = false;
+            CalculatorUI.minusButton.disabled = false;
+            CalculatorUI.multiplyButton.disabled = false;
+            CalculatorUI.divideButton.disabled = false;
+            CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.backspaceButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.plusButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.minusButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.multiplyButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.divideButton.className = CalculatorUI.BUTTON_ON_CLASS;
         }
     };
 }
 
 function cancelButtonEventListener() {
     return () => {
-        CalculatorUI.calculatorDisplay.value = "0";
+        CalculatorUI.calculatorDisplay.value = CalculatorUI.EMPTY_DISPLAY;
         CalculatorUI.dotButton.disabled = false;
-        CalculatorUI.dotButton.className = "calculator-button";
+        CalculatorUI.dotButton.className = CalculatorUI.BUTTON_ON_CLASS;
         reset();
         resetCalcUI();
     };
@@ -93,6 +229,18 @@ function cancelButtonEventListener() {
 
 function operatorButtonEventListener(button) {
     return () => {
+        //allow minus at begining of number
+        //if calculator is showing a vaild result on display (after '=' operation), minus is considered an operator input
+        if (button.textContent == CalculatorUI.BUTTON_MINUS && (CalculatorUI.calculatorDisplay.value == CalculatorUI.EMPTY_DISPLAY || CalculatorUI.calculatorDisplay.value == CalculatorUI.ERROR_MESSAGE || (CalculatorLogic.shouldClearDisplay && CalculatorLogic.arg1 != undefined))){
+            CalculatorUI.calculatorDisplay.value = button.textContent;
+            CalculatorUI.minusButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+            CalculatorUI.minusButton.disabled = true;
+            CalculatorUI.backspaceButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.backspaceButton.disabled = false;
+            CalculatorLogic.shouldClearDisplay = false;
+            return;
+
+        }
         if (CalculatorLogic.arg1 == undefined) {
             CalculatorLogic.arg1 = +CalculatorUI.calculatorDisplay.value;
             CalculatorLogic.operator = button.textContent;
@@ -100,19 +248,31 @@ function operatorButtonEventListener(button) {
         }
         else {
             CalculatorLogic.arg2 = +CalculatorUI.calculatorDisplay.value;
+            
             CalculatorLogic.arg1 = operate(CalculatorLogic.operator, CalculatorLogic.arg1, CalculatorLogic.arg2);
-            if (CalculatorLogic.arg1 > MAX_VALUE || CalculatorLogic.arg1 < MIN_VALUE) {
-                CalculatorUI.calculatorDisplay.value = "Err";
+            console.log(CalculatorLogic.arg1);
+            console.log(CalculatorLogic.arg2);
+            console.log(CalculatorLogic.operator);
+            
+            if (CalculatorLogic.arg1 == Infinity || CalculatorLogic.arg1 == -Infinity || CalculatorLogic.arg1 > CalculatorLogic.MAX_VALUE || CalculatorLogic.arg1 < CalculatorLogic.MIN_VALUE) {
+                CalculatorUI.calculatorDisplay.value = CalculatorUI.ERROR_MESSAGE;
                 reset();
+                resetCalcUI();
             }
             else if (Number.isInteger(CalculatorLogic.arg1)) {
                 CalculatorUI.calculatorDisplay.value = CalculatorLogic.arg1;
+
             }
             else {
-                CalculatorUI.calculatorDisplay.value = Number.parseFloat(CalculatorLogic.arg1).toPrecision(3);
+                CalculatorUI.calculatorDisplay.value = Number.parseFloat(CalculatorLogic.arg1).toFixed(3);
             }
             CalculatorLogic.operator = button.textContent;
-            resetCalcUI();
+            resetCalcUI();         
+        }
+
+        if (CalculatorLogic.arg1 != undefined) {
+            CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.cancelButton.disabled = false;
         }
     };
 }
@@ -126,18 +286,24 @@ function equalButtonEventListener() {
             let result = undefined;
             CalculatorLogic.arg2 = +CalculatorUI.calculatorDisplay.value;
             result = operate(CalculatorLogic.operator, CalculatorLogic.arg1, CalculatorLogic.arg2);
-            if (result > MAX_VALUE || result < MIN_VALUE) {
-                CalculatorUI.calculatorDisplay.value = "Err";
+            if (result > CalculatorLogic.MAX_VALUE || result < CalculatorLogic.MIN_VALUE) {
+                CalculatorUI.calculatorDisplay.value = CalculatorUI.ERROR_MESSAGE;
+                resetCalcUI();
             }
             else if (Number.isInteger(result)) {
                 CalculatorUI.calculatorDisplay.value = result;
             }
             else {
-                CalculatorUI.calculatorDisplay.value = Number.parseFloat(result).toPrecision(3);
+                CalculatorUI.calculatorDisplay.value = Number.parseFloat(result).toFixed(3);
             }
 
             reset();
-            resetCalcUI();
+            CalculatorUI.equalButton.disabled = true;
+            CalculatorUI.equalButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+            CalculatorUI.dotButton.disabled = false;
+            CalculatorUI.dotButton.className = CalculatorUI.BUTTON_ON_CLASS;
+
+            
         }
     };
 }
@@ -153,32 +319,33 @@ function resetCalcUI() {
     CalculatorLogic.shouldClearDisplay = true;
     CalculatorUI.dotButton.disabled = false;
     CalculatorUI.plusButton.disabled = true;
-    CalculatorUI.minusButton.disabled = true;
     CalculatorUI.multiplyButton.disabled = true;
     CalculatorUI.divideButton.disabled = true;
     CalculatorUI.equalButton.disabled = true;
-    CalculatorUI.dotButton.className = "calculator-button";
-    CalculatorUI.plusButton.className = "calculator-button-disabled";
-    CalculatorUI.minusButton.className = "calculator-button-disabled";
-    CalculatorUI.multiplyButton.className = "calculator-button-disabled";
-    CalculatorUI.divideButton.className = "calculator-button-disabled";
-    CalculatorUI.equalButton.className = "calculator-button-disabled";
+    CalculatorUI.cancelButton.disabled = true;
+    CalculatorUI.backspaceButton.disabled = true;
+    CalculatorUI.dotButton.className = CalculatorUI.BUTTON_ON_CLASS;
+    CalculatorUI.plusButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+    CalculatorUI.multiplyButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+    CalculatorUI.divideButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+    CalculatorUI.equalButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+    CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+    CalculatorUI.backspaceButton.className = CalculatorUI.BUTTON_OFF_CLASS;
 }
 
 function operate(operator, num1, num2){
-    if (operator == '+'){
+    if (operator == CalculatorUI.BUTTON_PLUS){
         return add(num1,num2);
     }
-    else if (operator == '-'){
+    else if (operator == CalculatorUI.BUTTON_MINUS){
         return subtract(num1,num2);
     }
-    else if (operator == 'X'){
+    else if (operator == CalculatorUI.BUTTON_MULTIPLY){
         return multiply(num1,num2);
     }
-    else if (operator == '÷'){
+    else if (operator == CalculatorUI.BUTTON_DIVIDE){
         return divide(num1,num2);
     }
-
 }
 
 function add(num1,num2){
@@ -191,8 +358,5 @@ function multiply(num1,num2){
     return num1*num2;
 }
 function divide(num1,num2){
-    if (num2 == 0){
-        return "Err";
-    }
     return num1/num2;
 }

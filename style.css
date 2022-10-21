@@ -39,7 +39,7 @@
     cursor: pointer;
 }
 
-.calculator-button-disabled{
+.calculator-button-disabled, .calculator-button-disabled#cancel-button, .calculator-button-disabled#backspace-button{
     flex-grow: 1;
     width: 60px;
     height: 60px;
@@ -68,12 +68,12 @@
     color: white;
 }
 
-#cancel-button {
+.calculator-button#cancel-button {
     background-color: rgb(158, 17, 17);
     box-shadow: 0 3px rgb(107, 11, 11);
 }
 
-#backspace-button{
+.calculator-button#backspace-button{
     background-color: rgb(158, 17, 17);
     box-shadow: 0 3px rgb(107, 11, 11);
 }
@@ -82,11 +82,11 @@
     background-color: rgb(247, 163, 9);
 }
 
-#cancel-button:hover {
+.calculator-button#cancel-button:hover {
     background-color: rgb(212, 23, 23);
 }
 
-#backspace-button:hover {
+.calculator-button#backspace-button:hover {
     background-color: rgb(212, 23, 23);
 }
 
@@ -96,13 +96,13 @@
     transform: translateY(4px);
 }
 
-#cancel-button:active {
+.calculator-button#cancel-button:active {
     background-color: rgb(212, 23, 23);
     box-shadow: 0 1px #666;
     transform: translateY(4px);
 }
 
-#backspace-button:active {
+.calculator-button#backspace-button:active {
     background-color: rgb(212, 23, 23);
     box-shadow: 0 1px #666;
     transform: translateY(4px);
