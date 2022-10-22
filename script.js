@@ -62,8 +62,6 @@ let CalculatorLogic = {
     shouldClearDisplay: true
 }
 
-console.log(CalculatorUI.calculatorDisplay);
-
 //add event listeners
 CalculatorUI.allButtonsList.forEach((button) => {
     if (button.textContent>=CalculatorUI.BUTTON_ZERO && button.textContent<=CalculatorUI.BUTTON_NINE){
