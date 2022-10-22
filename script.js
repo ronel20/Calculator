@@ -33,6 +33,7 @@ let CalculatorUI = {
     BUTTON_PLUS: '+',
     BUTTON_MINUS: '-',
     BUTTON_MULTIPLY: 'X',
+    KEY_MULTIPLY: '*',
     BUTTON_DIVIDE: '÷',
     KEY_DIVIDE: '/',
     BUTTON_EQUALS: '=',
@@ -85,8 +86,10 @@ CalculatorUI.allButtonsList.forEach((button) => {
 })
 
 // integrate keyboard
-document.addEventListener('keyup', (e) => {
-    switch(e.key){
+document.addEventListener('keyup', (e) => keyboardButtonEventListener(e));
+
+function keyboardButtonEventListener(e) {
+    switch (e.key) {
         case CalculatorUI.BUTTON_ZERO:
         case CalculatorUI.BUTTON_ONE:
         case CalculatorUI.BUTTON_TWO:
@@ -96,7 +99,7 @@ document.addEventListener('keyup', (e) => {
         case CalculatorUI.BUTTON_SIX:
         case CalculatorUI.BUTTON_SEVEN:
         case CalculatorUI.BUTTON_EIGHT:
-        case CalculatorUI.BUTTON_NINE:    
+        case CalculatorUI.BUTTON_NINE:
             CalculatorUI.numberButtons[Number.parseInt(e.key)].click();
             break;
         case CalculatorUI.BUTTON_PLUS:
@@ -106,15 +109,16 @@ document.addEventListener('keyup', (e) => {
             CalculatorUI.minusButton.click();
             break;
         case CalculatorUI.BUTTON_MULTIPLY:
+        case CalculatorUI.KEY_MULTIPLY:    
             CalculatorUI.multiplyButton.click();
             break;
         case CalculatorUI.BUTTON_DIVIDE:
-        case CalculatorUI.KEY_DIVIDE:    
+        case CalculatorUI.KEY_DIVIDE:
             CalculatorUI.divideButton.click();
             break;
         case CalculatorUI.BUTTON_EQUALS:
         case CalculatorUI.KEY_ENTER:
-        case CalculatorUI.KEY_NAMPAD_ENTER:    
+        case CalculatorUI.KEY_NAMPAD_ENTER:
             CalculatorUI.equalButton.click();
             break;
         case CalculatorUI.BUTTON_DOT:
@@ -127,11 +131,9 @@ document.addEventListener('keyup', (e) => {
             CalculatorUI.backspaceButton.click();
             break;
         default:
-            break;    
-
+            break;
     }
-
-})
+}
 
 /**
  * runs when the backspace button is clicked
@@ -161,11 +163,21 @@ function backspaceButtonEventListener() {
     }
 
     //display doesn't have text
-    if (CalculatorUI.calculatorDisplay.value.length == 0) {
+    if (CalculatorUI.calculatorDisplay.value.length == 0 || CalculatorUI.calculatorDisplay.value == CalculatorUI.BUTTON_MINUS) {
         resetCalcUI();
         if (CalculatorLogic.arg1 != undefined) {
             CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_ON_CLASS;
             CalculatorUI.cancelButton.disabled = false;
+        }
+
+        if (CalculatorUI.calculatorDisplay.value == CalculatorUI.BUTTON_MINUS){
+            CalculatorUI.cancelButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.cancelButton.disabled = false;
+            CalculatorUI.minusButton.className = CalculatorUI.BUTTON_OFF_CLASS;
+            CalculatorUI.minusButton.disabled = true;
+            CalculatorUI.backspaceButton.className = CalculatorUI.BUTTON_ON_CLASS;
+            CalculatorUI.backspaceButton.disabled = false;
+            CalculatorUI.shouldClearDisplay = false;
         }
     }
 }
